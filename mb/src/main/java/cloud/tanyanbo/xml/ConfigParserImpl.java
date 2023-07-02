@@ -3,8 +3,6 @@ package cloud.tanyanbo.xml;
 import cloud.tanyanbo.session.Configuration;
 import cloud.tanyanbo.session.DataSource;
 import cloud.tanyanbo.session.Environment;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -63,13 +61,13 @@ public class ConfigParserImpl extends ParserImpl implements ConfigParser {
 
         String driver = "", url = "", username = "", password = "";
         for (int k = 0; k < properties.getLength(); ++k) {
-          Node property = properties.item(k);
-          Element propertyElement = (Element) property;
+          Node propertyNode = properties.item(k);
+          Element propertyElement = (Element) propertyNode;
 
           String value = propertyElement.getAttribute("value");
-          String propertyName = getPropertyNameIfIsProperty(value);
-          if (propertyName != null) {
-            value = System.getProperty(propertyName);
+          Property property = getPropertyNameIfIsProperty(value);
+          if (property != null) {
+            value = System.getProperty(property.value());
           }
 
           switch (propertyElement.getAttribute("name")) {
@@ -89,10 +87,4 @@ public class ConfigParserImpl extends ParserImpl implements ConfigParser {
     return dataSource;
   }
 
-  private String getPropertyNameIfIsProperty(String input) {
-    Pattern pattern = Pattern.compile("\\$\\{(.*)}");
-    Matcher matcher = pattern.matcher(input);
-
-    return matcher.find() ? matcher.group(1) : null;
-  }
 }
