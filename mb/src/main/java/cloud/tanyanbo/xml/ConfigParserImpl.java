@@ -3,6 +3,7 @@ package cloud.tanyanbo.xml;
 import cloud.tanyanbo.session.Configuration;
 import cloud.tanyanbo.session.DataSource;
 import cloud.tanyanbo.session.Environment;
+import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -65,9 +66,12 @@ public class ConfigParserImpl extends ParserImpl implements ConfigParser {
           Element propertyElement = (Element) propertyNode;
 
           String value = propertyElement.getAttribute("value");
-          Property property = getPropertyNameIfIsProperty(value);
-          if (property != null) {
-            value = System.getProperty(property.value());
+          AllProperties allProperties = getPropertyNameIfIsProperty(value);
+          if (allProperties.getProperties().size() > 0) {
+            for (Property property : allProperties.getProperties()) {
+              value = StringUtils.replace(value, property.fullPattern(),
+                System.getenv(property.value()));
+            }
           }
 
           switch (propertyElement.getAttribute("name")) {

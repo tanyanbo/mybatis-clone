@@ -1,6 +1,7 @@
 package cloud.tanyanbo.xml;
 
 import java.io.File;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilder;
@@ -26,17 +27,21 @@ public class ParserImpl implements Parser {
     }
   }
 
-  protected Property getPropertyNameIfIsProperty(String input) {
-    Pattern pattern = Pattern.compile("(#|\\$)\\{(.*)}");
+  protected AllProperties getPropertyNameIfIsProperty(String input) {
+    Pattern pattern = Pattern.compile("(#|\\$)\\{([A-Za-z0-9_]*)}");
     Matcher matcher = pattern.matcher(input);
 
-    if (!matcher.find()) {
-      return null;
+    AllProperties allProperties = new AllProperties();
+    List<Property> properties = allProperties.getProperties();
+    while (matcher.find()) {
+      properties.add(
+        new Property(
+          matcher.group(1).equals("$") ? PropertyType.RAW_STRING : PropertyType.VARIABLE,
+          matcher.group(2),
+          matcher.group(0)));
+      allProperties.setProperties(properties);
     }
 
-    return new Property(
-      matcher.group(1).equals("$") ? PropertyType.RAW_STRING : PropertyType.VARIABLE,
-      matcher.group(2)
-    );
+    return allProperties;
   }
 }
