@@ -12,10 +12,10 @@ import org.w3c.dom.NodeList;
 public class ConfigParserImpl extends ParserImpl implements ConfigParser {
 
   @Override
-  public Configuration getConfigurationFromDom(Document doc) {
+  public Configuration getConfigurationFromDom(Document dom) {
     Configuration configuration = new Configuration();
 
-    Node environmentsNode = doc.getElementsByTagName("environments").item(0);
+    Node environmentsNode = dom.getElementsByTagName("environments").item(0);
     Element environmentsElement = (Element) environmentsNode;
     String defaultEnvironmentId = environmentsElement.getAttribute("default");
     configuration.setCurrentEnvironmentId(defaultEnvironmentId);
@@ -96,5 +96,4 @@ public class ConfigParserImpl extends ParserImpl implements ConfigParser {
 
     return value;
   }
-
 }
