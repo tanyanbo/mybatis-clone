@@ -1,5 +1,7 @@
 package cloud.tanyanbo;
 
+import cloud.tanyanbo.mapper.BrandMapper;
+import cloud.tanyanbo.session.SqlSession;
 import cloud.tanyanbo.session.SqlSessionFactory;
 import cloud.tanyanbo.session.SqlSessionFactoryBuilder;
 import java.net.URL;
@@ -12,6 +14,8 @@ public class Main {
     SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(
       resource.getPath(), "prod");
 
-    sqlSessionFactory.openSession();
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    BrandMapper mapper = sqlSession.getMapper(BrandMapper.class);
+    mapper.deleteById(10);
   }
 }

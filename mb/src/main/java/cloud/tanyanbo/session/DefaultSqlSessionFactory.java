@@ -45,6 +45,6 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
     } catch (SQLException e) {
       e.printStackTrace();
     }
-    return null;
+    return new DefaultSqlSession();
   }
 }
