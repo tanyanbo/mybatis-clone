@@ -65,15 +65,7 @@ public class ConfigParserImpl extends ParserImpl implements ConfigParser {
           Node propertyNode = properties.item(k);
           Element propertyElement = (Element) propertyNode;
 
-          String value = propertyElement.getAttribute("value");
-          AllProperties allProperties = getPropertyNameIfIsProperty(value);
-          if (allProperties.getProperties().size() > 0) {
-            for (Property property : allProperties.getProperties()) {
-              value = StringUtils.replace(value, property.fullPattern(),
-                System.getenv(property.value()));
-            }
-          }
-
+          String value = getValueAttributeFromElement(propertyElement);
           switch (propertyElement.getAttribute("name")) {
             case "driver" -> driver = value;
             case "url" -> url = value;
@@ -89,6 +81,20 @@ public class ConfigParserImpl extends ParserImpl implements ConfigParser {
     }
 
     return dataSource;
+  }
+
+  private String getValueAttributeFromElement(Element propertyElement) {
+    String value = propertyElement.getAttribute("value");
+
+    AllProperties allProperties = getVariables(value);
+    if (allProperties.getProperties().size() > 0) {
+      for (Property property : allProperties.getProperties()) {
+        value = StringUtils.replace(value, property.fullPattern(),
+          System.getenv(property.value()));
+      }
+    }
+
+    return value;
   }
 
 }

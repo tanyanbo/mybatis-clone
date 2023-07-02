@@ -27,7 +27,7 @@ public class ParserImpl implements Parser {
     }
   }
 
-  protected AllProperties getPropertyNameIfIsProperty(String input) {
+  protected AllProperties getVariables(String input) {
     Pattern pattern = Pattern.compile("(#|\\$)\\{([A-Za-z0-9_]*)}");
     Matcher matcher = pattern.matcher(input);
 
