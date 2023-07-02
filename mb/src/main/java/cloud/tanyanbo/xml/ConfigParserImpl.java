@@ -67,8 +67,9 @@ public class ConfigParserImpl extends ParserImpl implements ConfigParser {
           Element propertyElement = (Element) property;
 
           String value = propertyElement.getAttribute("value");
-          if (isProperty(value)) {
-            value = System.getProperty(value.substring(2, value.length() - 1));
+          String propertyName = getPropertyNameIfIsProperty(value);
+          if (propertyName != null) {
+            value = System.getProperty(propertyName);
           }
 
           switch (propertyElement.getAttribute("name")) {
@@ -88,12 +89,10 @@ public class ConfigParserImpl extends ParserImpl implements ConfigParser {
     return dataSource;
   }
 
-  private boolean isProperty(String input) {
-    Pattern pattern = Pattern.compile("\\$\\{.*}");
+  private String getPropertyNameIfIsProperty(String input) {
+    Pattern pattern = Pattern.compile("\\$\\{(.*)}");
     Matcher matcher = pattern.matcher(input);
 
-    boolean found = matcher.find();
-    matcher.reset();
-    return found;
+    return matcher.find() ? matcher.group(1) : null;
   }
 }
