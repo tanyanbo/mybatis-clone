@@ -1,13 +1,15 @@
 package cloud.tanyanbo.session;
 
 import cloud.tanyanbo.xml.ConfigParser;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
+import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.Document;
 
+@Slf4j
 public class DefaultSqlSessionFactory implements SqlSessionFactory {
 
   Configuration configuration;
@@ -31,20 +33,32 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
       .orElseThrow()
       .dataSource();
 
-    String url = dataSource.url();
-    String username = dataSource.username();
-    String password = dataSource.password();
+    HikariDataSource hikariDataSource = initHikariDataSource(dataSource);
 
-    try (Connection connection = DriverManager.getConnection(url, username, password)) {
+    String sql = "SELECT * FROM tb_brand";
+    try (
+      Connection connection = hikariDataSource.getConnection();
       Statement statement = connection.createStatement();
-      String sql = "SELECT * FROM tb_brand";
       ResultSet resultSet = statement.executeQuery(sql);
+    ) {
       while (resultSet.next()) {
         System.out.println(resultSet.getString("brand_name"));
       }
-    } catch (SQLException e) {
+    } catch (Exception e) {
+      //Handle errors for Class.forName
       e.printStackTrace();
     }
-    return new DefaultSqlSession();
+
+    return new DefaultSqlSession(hikariDataSource);
+  }
+
+  private HikariDataSource initHikariDataSource(DataSource dataSource) {
+    HikariConfig config = new HikariConfig();
+    config.setJdbcUrl(dataSource.url());
+    config.setUsername(dataSource.username());
+    config.setPassword(dataSource.password());
+    config.setMaximumPoolSize(4);
+
+    return new HikariDataSource(config);
   }
 }
