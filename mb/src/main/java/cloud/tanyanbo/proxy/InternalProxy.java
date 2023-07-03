@@ -2,10 +2,8 @@ package cloud.tanyanbo.proxy;
 
 
 import cloud.tanyanbo.xml.MapperParserImpl;
-import cloud.tanyanbo.xml.SqlQuery;
 import java.lang.reflect.Proxy;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class InternalProxy {
@@ -20,14 +18,7 @@ public class InternalProxy {
       t = (T) Proxy.newProxyInstance(
         clazz.getClassLoader(),
         new Class[]{clazz},
-        (proxy, method, args) -> {
-          MapperParserImpl mapperParser = new MapperParserImpl();
-          List<SqlQuery> sqlQueries = mapperParser.getSqlQueries(clazz);
-          System.out.println(sqlQueries);
-          System.out.printf("method: %s, args: %s", method.getName(),
-            java.util.Arrays.toString(args));
-          return null;
-        }
+        new Handler(clazz, new MapperParserImpl())
       );
       map.put(clazz, t);
     }

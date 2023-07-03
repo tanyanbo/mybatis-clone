@@ -36,7 +36,7 @@ public class ParserImpl implements Parser {
     while (matcher.find()) {
       variables.add(
         new Variable(
-          matcher.group(1).equals("$") ? VariableType.RAW_STRING : VariableType.VARIABLE,
+          matcher.group(1).equals("$") ? VariableType.RAW_STRING : VariableType.PARAMETER,
           matcher.group(2),
           matcher.group(0)));
       allVariables.setVariables(variables);
