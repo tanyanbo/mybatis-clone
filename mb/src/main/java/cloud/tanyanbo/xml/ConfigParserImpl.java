@@ -86,11 +86,11 @@ public class ConfigParserImpl extends ParserImpl implements ConfigParser {
   private String getValueAttributeFromElement(Element propertyElement) {
     String value = propertyElement.getAttribute("value");
 
-    AllProperties allProperties = getVariables(value);
-    if (allProperties.getProperties().size() > 0) {
-      for (Property property : allProperties.getProperties()) {
-        value = StringUtils.replace(value, property.fullPattern(),
-          System.getenv(property.value()));
+    AllVariables allVariables = getVariables(value);
+    if (allVariables.getVariables().size() > 0) {
+      for (Variable variable : allVariables.getVariables()) {
+        value = StringUtils.replace(value, variable.fullPattern(),
+          System.getenv(variable.value()));
       }
     }
 

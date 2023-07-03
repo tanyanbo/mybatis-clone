@@ -1,6 +1,6 @@
 package cloud.tanyanbo.xml;
 
-public enum PropertyType {
+public enum VariableType {
   RAW_STRING,
   VARIABLE;
 }

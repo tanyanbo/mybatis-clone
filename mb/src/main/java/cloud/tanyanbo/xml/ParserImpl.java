@@ -27,21 +27,21 @@ public class ParserImpl implements Parser {
     }
   }
 
-  protected AllProperties getVariables(String input) {
+  protected AllVariables getVariables(String input) {
     Pattern pattern = Pattern.compile("(#|\\$)\\{([A-Za-z0-9_]*)}");
     Matcher matcher = pattern.matcher(input);
 
-    AllProperties allProperties = new AllProperties();
-    List<Property> properties = allProperties.getProperties();
+    AllVariables allVariables = new AllVariables();
+    List<Variable> variables = allVariables.getVariables();
     while (matcher.find()) {
-      properties.add(
-        new Property(
-          matcher.group(1).equals("$") ? PropertyType.RAW_STRING : PropertyType.VARIABLE,
+      variables.add(
+        new Variable(
+          matcher.group(1).equals("$") ? VariableType.RAW_STRING : VariableType.VARIABLE,
           matcher.group(2),
           matcher.group(0)));
-      allProperties.setProperties(properties);
+      allVariables.setVariables(variables);
     }
 
-    return allProperties;
+    return allVariables;
   }
 }

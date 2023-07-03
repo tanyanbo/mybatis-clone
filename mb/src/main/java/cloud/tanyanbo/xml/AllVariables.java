@@ -5,7 +5,7 @@ import java.util.List;
 import lombok.Data;
 
 @Data
-public class AllProperties {
+public class AllVariables {
 
-  List<Property> properties = new ArrayList<>();
+  List<Variable> variables = new ArrayList<>();
 }
