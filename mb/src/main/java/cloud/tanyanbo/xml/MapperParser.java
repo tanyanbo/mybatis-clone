@@ -1,6 +1,8 @@
 package cloud.tanyanbo.xml;
 
-public interface MapperParser {
+import org.w3c.dom.Document;
 
-  SqlQuery parse(String id, Object[] args);
+public interface MapperParser extends Parser {
+
+  SqlQuery parse(String id, Document dom);
 }

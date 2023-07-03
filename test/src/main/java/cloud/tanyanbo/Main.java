@@ -15,6 +15,6 @@ public class Main {
 
     SqlSession sqlSession = sqlSessionFactory.openSession();
     BrandMapper mapper = sqlSession.getMapper(BrandMapper.class);
-    mapper.selectById(10);
+    mapper.selectAll();
   }
 }

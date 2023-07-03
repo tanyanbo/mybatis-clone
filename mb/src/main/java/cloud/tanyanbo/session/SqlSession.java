@@ -11,5 +11,5 @@ public interface SqlSession {
 
   List<Object> selectList(SqlQuery query);
 
-  Object selectOne(SqlQuery query);
+  Object selectOne(String name, Object[] params, Class<?> clazz);
 }
