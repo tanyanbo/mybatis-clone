@@ -1,5 +1,6 @@
 package cloud.tanyanbo.session;
 
+import cloud.tanyanbo.xml.SqlQuery;
 import java.util.List;
 
 public interface SqlSession {
@@ -8,7 +9,7 @@ public interface SqlSession {
 
   void close();
 
-  List<Object> selectList(String queryId);
+  List<Object> selectList(SqlQuery query);
 
-  Object selectOne(String queryId);
+  Object selectOne(SqlQuery query);
 }

@@ -16,11 +16,9 @@ public class Handler implements InvocationHandler {
 
   @Override
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-    System.out.printf("method: %s, args: %s", method.getName(),
-      java.util.Arrays.toString(args));
     SqlQuery query = mapperParser.parse(method.getName(), args);
-    if (method.getName().equals("selectOne")) {
-      sqlSession.selectOne(method.getName());
+    if (method.getName().equals("selectById")) {
+      sqlSession.selectOne(query);
     }
     return null;
   }

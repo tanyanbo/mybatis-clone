@@ -3,9 +3,6 @@ package cloud.tanyanbo.session;
 import cloud.tanyanbo.xml.ConfigParser;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.Document;
 
@@ -34,20 +31,6 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
       .dataSource();
 
     HikariDataSource hikariDataSource = initHikariDataSource(dataSource);
-
-    String sql = "SELECT * FROM tb_brand";
-    try (
-      Connection connection = hikariDataSource.getConnection();
-      Statement statement = connection.createStatement();
-      ResultSet resultSet = statement.executeQuery(sql);
-    ) {
-      while (resultSet.next()) {
-        System.out.println(resultSet.getString("brand_name"));
-      }
-    } catch (Exception e) {
-      //Handle errors for Class.forName
-      e.printStackTrace();
-    }
 
     return new DefaultSqlSession(hikariDataSource);
   }
