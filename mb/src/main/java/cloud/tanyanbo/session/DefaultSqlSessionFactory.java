@@ -1,6 +1,8 @@
 package cloud.tanyanbo.session;
 
+import cloud.tanyanbo.sql.ExecutorImpl;
 import cloud.tanyanbo.xml.ConfigParser;
+import cloud.tanyanbo.xml.MapperParser;
 import cloud.tanyanbo.xml.MapperParserImpl;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -32,8 +34,13 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
       .dataSource();
 
     HikariDataSource hikariDataSource = initHikariDataSource(dataSource);
+    MapperParser mapperParser = new MapperParserImpl();
 
-    return new DefaultSqlSession(hikariDataSource, new MapperParserImpl());
+    return new DefaultSqlSession(
+      hikariDataSource,
+      mapperParser,
+      new ExecutorImpl(mapperParser)
+    );
   }
 
   private HikariDataSource initHikariDataSource(DataSource dataSource) {

@@ -15,9 +15,7 @@ public class Handler implements InvocationHandler {
 
   @Override
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-    if (method.getName().equals("selectAll")) {
-      sqlSession.selectOne(method.getName(), args, clazz);
-    }
+    sqlSession.executeQuery(method.getName(), args, clazz);
     return null;
   }
 }

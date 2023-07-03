@@ -3,9 +3,14 @@
     select *
     from tb_brand;
   </select>
+  <!--  <select id="selectById" resultMap="brandResultMap">-->
+  <!--    select *-->
+  <!--    from tb_brand-->
+  <!--    where id = #{id};-->
+  <!--  </select>-->
   <select id="selectById" resultMap="brandResultMap">
     select *
     from tb_brand
-    where id = #{id};
+    where id = 1;
   </select>
 </mapper>
