@@ -4,6 +4,8 @@ import cloud.tanyanbo.session.SqlSession;
 import cloud.tanyanbo.xml.MapperParser;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -15,7 +17,11 @@ public class Handler implements InvocationHandler {
 
   @Override
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-    sqlSession.executeQuery(method.getName(), args, clazz);
+    Map<String, Object> params = new HashMap<>();
+    for (int i = 0; i < method.getParameters().length; ++i) {
+      params.put(method.getParameters()[i].getName(), args[i]);
+    }
+    sqlSession.executeQuery(method.getName(), params, clazz);
     return null;
   }
 }

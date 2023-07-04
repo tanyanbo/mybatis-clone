@@ -1,12 +1,10 @@
 package cloud.tanyanbo;
 
 import cloud.tanyanbo.mapper.BrandMapper;
-import cloud.tanyanbo.pojo.Brand;
 import cloud.tanyanbo.session.SqlSession;
 import cloud.tanyanbo.session.SqlSessionFactory;
 import cloud.tanyanbo.session.SqlSessionFactoryBuilder;
 import java.net.URL;
-import java.util.List;
 
 public class Main {
 
@@ -17,7 +15,7 @@ public class Main {
 
     SqlSession sqlSession = sqlSessionFactory.openSession();
     BrandMapper mapper = sqlSession.getMapper(BrandMapper.class);
-//    mapper.selectById(1);
-    List<Brand> brands = mapper.selectAll();
+    mapper.selectById(3);
+//    List<Brand> brands = mapper.selectAll();
   }
 }

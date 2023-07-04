@@ -34,7 +34,7 @@ public class DefaultSqlSession implements SqlSession {
   }
 
   @Override
-  public <T> T executeQuery(String queryId, Object[] params, Class<?> mapperType) {
+  public <T> T executeQuery(String queryId, Map<String, Object> params, Class<?> mapperType) {
     Document domFromMapper = getDomFromMapper(mapperType);
     executor.query(queryId, params, domFromMapper, dataSource);
     return null;
