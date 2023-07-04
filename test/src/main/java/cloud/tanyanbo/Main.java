@@ -15,7 +15,7 @@ public class Main {
 
     SqlSession sqlSession = sqlSessionFactory.openSession();
     BrandMapper mapper = sqlSession.getMapper(BrandMapper.class);
-    mapper.selectById(3);
+    mapper.selectById(1, "tb_brand");
 //    List<Brand> brands = mapper.selectAll();
   }
 }

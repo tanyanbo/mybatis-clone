@@ -14,5 +14,5 @@ public interface BrandMapper {
   /**
    * 查看详情：根据Id查询
    */
-  Brand selectById(int id);
+  Brand selectById(int id, String table);
 }

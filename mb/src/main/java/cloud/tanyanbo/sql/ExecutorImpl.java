@@ -30,30 +30,35 @@ public class ExecutorImpl implements Executor {
     String sqlStatement = query.query();
 
     if (query.isPreparedStatement()) {
+      // replace all raw string with actual values and replace all variable with ?
+      List<String> variableNames = new ArrayList<>();
+      for (int i = 0; i < query.params().size(); ++i) {
+        Variable variable = query.params().get(i);
+        if (variable.type() == VariableType.RAW_STRING) {
+          sqlStatement = sqlStatement.replace(variable.fullPattern(),
+            params.get(variable.value()).toString());
+        } else {
+          sqlStatement = sqlStatement.replace(variable.fullPattern(), "?");
+          variableNames.add(variable.value());
+        }
+      }
+
       try (
         Connection connection = dataSource.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(sqlStatement)
       ) {
-
-        List<String> variableNames = new ArrayList<>();
-        for (int i = 0; i < query.params().size(); ++i) {
-          Variable variable = query.params().get(i);
-          if (variable.type() == VariableType.RAW_STRING) {
-            sqlStatement = sqlStatement.replace(variable.fullPattern(),
-              params.get(variable.value()).toString());
-          } else {
-            sqlStatement = sqlStatement.replace(variable.fullPattern(), "?");
-            variableNames.add(variable.value());
-          }
-        }
-
-        PreparedStatement preparedStatement = connection.prepareStatement(sqlStatement);
         for (int i = 0; i < variableNames.size(); ++i) {
           preparedStatement.setObject(i + 1, params.get(variableNames.get(i)));
         }
 
-        ResultSet resultSet = preparedStatement.executeQuery();
-        while (resultSet.next()) {
-          System.out.println(resultSet.getString("brand_name"));
+        boolean hasResultSet = preparedStatement.execute();
+        if (hasResultSet) {
+          ResultSet resultSet = preparedStatement.getResultSet();
+          while (resultSet.next()) {
+            System.out.println(resultSet.getString("brand_name"));
+          }
+        } else {
+          return null;
         }
       } catch (SQLException e) {
         e.printStackTrace();

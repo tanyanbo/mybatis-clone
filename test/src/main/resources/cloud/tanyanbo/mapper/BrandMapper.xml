@@ -5,7 +5,7 @@
   </select>
   <select id="selectById" resultMap="brandResultMap">
     select *
-    from tb_brand
+    from ${table}
     where id = #{id};
   </select>
 </mapper>

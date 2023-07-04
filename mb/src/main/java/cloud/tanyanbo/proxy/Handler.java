@@ -21,6 +21,8 @@ public class Handler implements InvocationHandler {
     for (int i = 0; i < method.getParameters().length; ++i) {
       params.put(method.getParameters()[i].getName(), args[i]);
     }
+//    Class<?> returnType = method.getReturnType();
+//    System.out.println(returnType.getName());
     sqlSession.executeQuery(method.getName(), params, clazz);
     return null;
   }
