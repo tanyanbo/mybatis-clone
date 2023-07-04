@@ -5,6 +5,7 @@ import cloud.tanyanbo.xml.SqlQuery;
 import cloud.tanyanbo.xml.Variable;
 import cloud.tanyanbo.xml.VariableType;
 import com.zaxxer.hikari.HikariDataSource;
+import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,9 +25,9 @@ public class ExecutorImpl implements Executor {
   }
 
   @Override
-  public <T> T query(String queryId, Map<String, Object> params, Document dom,
+  public <T> T query(Method method, Map<String, Object> params, Document dom,
     HikariDataSource dataSource) {
-    SqlQuery query = mapperParser.parse(queryId, dom);
+    SqlQuery query = mapperParser.parse(method.getName(), dom);
     String sqlStatement = query.query();
 
     if (query.isPreparedStatement()) {
@@ -54,15 +55,17 @@ public class ExecutorImpl implements Executor {
         boolean hasResultSet = preparedStatement.execute();
         if (hasResultSet) {
           ResultSet resultSet = preparedStatement.getResultSet();
-          while (resultSet.next()) {
-            System.out.println(resultSet.getString("brand_name"));
-          }
+          List<Object> objects = parseResult(resultSet,
+            method.getGenericReturnType().getTypeName());
+          return objects.size() == 0 ? null
+            : objects.size() == 1 ? (T) objects.get(0) : (T) objects;
         } else {
           return null;
         }
       } catch (SQLException e) {
         e.printStackTrace();
       }
+
       return null;
     }
 
@@ -71,12 +74,58 @@ public class ExecutorImpl implements Executor {
       Statement statement = connection.createStatement();
       ResultSet resultSet = statement.executeQuery(query.query());
     ) {
-      while (resultSet.next()) {
-        System.out.println(resultSet.getString("brand_name"));
-      }
+      List<Object> objects = parseResult(resultSet, method.getGenericReturnType().getTypeName());
+      return objects.size() == 0 ? null : objects.size() == 1 ? (T) objects.get(0) : (T) objects;
     } catch (SQLException e) {
       e.printStackTrace();
     }
     return null;
+  }
+
+  @SuppressWarnings("unchecked")
+  private <T> List<T> parseResult(ResultSet resultSet, String returnType) {
+    try {
+      if (isGenericReturnType(returnType)) {
+        returnType = returnType.substring(returnType.indexOf("<") + 1, returnType.indexOf(">"));
+      }
+      Class<?> clazz = Class.forName(returnType);
+
+      T instance = (T) clazz.getDeclaredConstructor().newInstance();
+
+      List<T> result = new ArrayList<>();
+
+      while (resultSet.next()) {
+        for (int i = 1; i <= resultSet.getMetaData().getColumnCount(); ++i) {
+          String columnName = resultSet.getMetaData().getColumnName(i);
+          columnName = toCamelCase(columnName);
+          Object value = resultSet.getObject(i);
+          clazz.getDeclaredField(columnName).set(instance, value);
+        }
+        result.add(instance);
+      }
+
+      return result;
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  private boolean isGenericReturnType(String returnType) {
+    return returnType.contains("<") && returnType.contains(">");
+  }
+
+  private static String toCamelCase(String s) {
+    String[] parts = s.split("_");
+    StringBuilder camelCaseString = new StringBuilder(parts[0]);
+    for (int i = 1; i < parts.length; i++) {
+      camelCaseString.append(toProperCase(parts[i]));
+    }
+    return camelCaseString.toString();
+  }
+
+  private static String toProperCase(String s) {
+    return s.substring(0, 1).toUpperCase() +
+      s.substring(1).toLowerCase();
   }
 }

@@ -1,20 +1,29 @@
 package cloud.tanyanbo.pojo;
 
-import lombok.Data;
-
-@Data
 public class Brand {
 
   // id 主键
-  private Integer id;
+  public Integer id;
   // 品牌名称
-  private String brandName;
+  public String brandName;
   // 企业名称
-  private String companyName;
+  public String companyName;
   // 排序字段
-  private Integer ordered;
+  public Integer ordered;
   // 描述信息
-  private String description;
+  public String description;
   // 状态：0：禁用  1：启用
-  private Integer status;
+  public Integer status;
+
+  @Override
+  public String toString() {
+    return "Brand{" +
+      "id=" + id +
+      ", brandName='" + brandName + '\'' +
+      ", companyName='" + companyName + '\'' +
+      ", ordered=" + ordered +
+      ", description='" + description + '\'' +
+      ", status=" + status +
+      '}';
+  }
 }

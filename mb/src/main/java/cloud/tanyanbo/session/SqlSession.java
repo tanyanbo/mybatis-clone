@@ -1,5 +1,6 @@
 package cloud.tanyanbo.session;
 
+import java.lang.reflect.Method;
 import java.util.Map;
 
 public interface SqlSession {
@@ -8,5 +9,5 @@ public interface SqlSession {
 
   void close();
 
-  <T> T executeQuery(String queryId, Map<String, Object> params, Class<?> mapperType);
+  <T> T executeQuery(Method method, Map<String, Object> params, Class<?> mapperType);
 }

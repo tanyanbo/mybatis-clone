@@ -1,6 +1,7 @@
 package cloud.tanyanbo;
 
 import cloud.tanyanbo.mapper.BrandMapper;
+import cloud.tanyanbo.pojo.Brand;
 import cloud.tanyanbo.session.SqlSession;
 import cloud.tanyanbo.session.SqlSessionFactory;
 import cloud.tanyanbo.session.SqlSessionFactoryBuilder;
@@ -15,7 +16,8 @@ public class Main {
 
     SqlSession sqlSession = sqlSessionFactory.openSession();
     BrandMapper mapper = sqlSession.getMapper(BrandMapper.class);
-    mapper.selectById(1, "tb_brand");
-//    List<Brand> brands = mapper.selectAll();
+    Brand tbBrand = mapper.selectById(1, "tb_brand");
+    System.out.println(tbBrand);
+//    mapper.selectAll();
   }
 }

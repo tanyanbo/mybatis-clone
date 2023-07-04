@@ -4,6 +4,7 @@ import cloud.tanyanbo.proxy.InternalProxy;
 import cloud.tanyanbo.sql.Executor;
 import cloud.tanyanbo.xml.MapperParser;
 import com.zaxxer.hikari.HikariDataSource;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,10 +35,9 @@ public class DefaultSqlSession implements SqlSession {
   }
 
   @Override
-  public <T> T executeQuery(String queryId, Map<String, Object> params, Class<?> mapperType) {
+  public <T> T executeQuery(Method method, Map<String, Object> params, Class<?> mapperType) {
     Document domFromMapper = getDomFromMapper(mapperType);
-    executor.query(queryId, params, domFromMapper, dataSource);
-    return null;
+    return executor.query(method, params, domFromMapper, dataSource);
   }
 
   private Document getDomFromMapper(Class<?> mapperType) {
