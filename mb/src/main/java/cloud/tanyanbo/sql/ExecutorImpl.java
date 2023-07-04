@@ -90,11 +90,10 @@ public class ExecutorImpl implements Executor {
       }
       Class<?> clazz = Class.forName(returnType);
 
-      T instance = (T) clazz.getDeclaredConstructor().newInstance();
-
       List<T> result = new ArrayList<>();
 
       while (resultSet.next()) {
+        T instance = (T) clazz.getDeclaredConstructor().newInstance();
         for (int i = 1; i <= resultSet.getMetaData().getColumnCount(); ++i) {
           String columnName = resultSet.getMetaData().getColumnName(i);
           columnName = toCamelCase(columnName);

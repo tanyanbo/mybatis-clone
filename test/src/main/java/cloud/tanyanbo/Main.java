@@ -6,6 +6,7 @@ import cloud.tanyanbo.session.SqlSession;
 import cloud.tanyanbo.session.SqlSessionFactory;
 import cloud.tanyanbo.session.SqlSessionFactoryBuilder;
 import java.net.URL;
+import java.util.List;
 
 public class Main {
 
@@ -18,6 +19,8 @@ public class Main {
     BrandMapper mapper = sqlSession.getMapper(BrandMapper.class);
     Brand tbBrand = mapper.selectById(1, "tb_brand");
     System.out.println(tbBrand);
-//    mapper.selectAll();
+    System.out.println("----------------------------");
+    List<Brand> brands = mapper.selectAll();
+    System.out.println(brands);
   }
 }
